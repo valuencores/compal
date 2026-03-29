@@ -423,18 +423,18 @@
 
     <div class="field">
       <label>초기 투자금 <span class="val" id="principalDisplay">₩1,000,000</span></label>
-      <input type="range" id="principal" min="100000" max="100000000" step="100000" value="1000000" oninput="update()">
+      <input type="range" id="principal" min="1000000" max="300000000" step="1000000" value="1000000" oninput="update()">
       <div class="number-input">
-        <input type="number" id="principalNum" value="1000000" min="0" step="100000" oninput="syncFromNum('principal','principalNum'); update()">
+        <input type="number" id="principalNum" value="1000000" min="1000000" max="300000000" step="1000000" oninput="syncFromNum('principal','principalNum'); update()">
         <span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;">원</span>
       </div>
     </div>
 
     <div class="field">
       <label>월 추가 납입금 <span class="val" id="monthlyDisplay">₩100,000</span></label>
-      <input type="range" id="monthly" min="0" max="5000000" step="50000" value="100000" oninput="update()">
+      <input type="range" id="monthly" min="100000" max="10000000" step="100000" value="100000" oninput="update()">
       <div class="number-input">
-        <input type="number" id="monthlyNum" value="100000" min="0" step="50000" oninput="syncFromNum('monthly','monthlyNum'); update()">
+        <input type="number" id="monthlyNum" value="100000" min="100000" max="10000000" step="100000" oninput="syncFromNum('monthly','monthlyNum'); update()">
         <span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;">원</span>
       </div>
     </div>
@@ -446,19 +446,19 @@
     <div class="card-title">수익률 & 기간</div>
 
     <div class="field">
-      <label>연 이자율 <span class="val" id="rateDisplay">5%</span></label>
-      <input type="range" id="rate" min="0.1" max="30" step="0.1" value="5" oninput="update()">
+      <label>월 이자율 <span class="val" id="rateDisplay">1%</span></label>
+      <input type="range" id="rate" min="1" max="30" step="0.1" value="1" oninput="update()">
       <div class="number-input">
-        <input type="number" id="rateNum" value="5" min="0.01" max="100" step="0.1" oninput="syncFromNum('rate','rateNum'); update()">
+        <input type="number" id="rateNum" value="1" min="1" max="30" step="0.1" oninput="syncFromNum('rate','rateNum'); update()">
         <span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;">%</span>
       </div>
     </div>
 
     <div class="field">
-      <label>투자 기간 <span class="val" id="yearsDisplay">20년</span></label>
-      <input type="range" id="years" min="1" max="50" step="1" value="20" oninput="update()">
+      <label>투자 기간 <span class="val" id="yearsDisplay">1년</span></label>
+      <input type="range" id="years" min="1" max="20" step="1" value="1" oninput="update()">
       <div class="number-input">
-        <input type="number" id="yearsNum" value="20" min="1" max="200" step="1" oninput="syncFromNum('years','yearsNum'); update()">
+        <input type="number" id="yearsNum" value="1" min="1" max="20" step="1" oninput="syncFromNum('years','yearsNum'); update()">
         <span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;">년</span>
       </div>
     </div>
@@ -557,7 +557,9 @@
     document.getElementById('rateDisplay').textContent = rate + '%';
     document.getElementById('yearsDisplay').textContent = years + '년';
 
-    const r = rate / 100 / freq;
+    // 월 이자율 기준으로 계산 (freq에 관계없이 월 이자율을 주기별로 환산)
+    const monthlyRate = rate / 100;
+    const r = Math.pow(1 + monthlyRate, 12 / freq) - 1;
     const monthlyPerPeriod = monthly * 12 / freq;
 
     let yearData = [];
